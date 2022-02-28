@@ -1,0 +1,151 @@
+.card-query{
+    margin-top: 50px;
+}
+
+img {
+
+}
+
+/*.tableFixHead          { overflow: auto; height: 500px; }
+.tableFixHead thead th { position: sticky; top: 0; z-index: 1; }*/
+
+/* Just common table stuff. Really. */
+/*table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 16px; }
+th     { background:#eee; }*/
+.dataTables_wrapper .dataTables_info {
+    padding-bottom: 0.755em;
+}
+
+#customFile .custom-file-input:lang(en)::after {
+  content: "Select file...";
+}
+
+#customFile .custom-file-input:lang(en)::before {
+  content: "Click me";
+}
+
+/*when a value is selected, this class removes the content */
+.custom-file-input.selected:lang(en)::after {
+  content: "" !important;
+}
+
+.custom-file {
+  overflow: hidden;
+}
+.custom-file-input {
+  white-space: nowrap;
+}
+
+/* Botao de spinner */
+
+/* This is the submit button styles */
+button {
+  display: block;
+  margin: 0 auto;
+  padding: .6em .8em;
+  /* Font-size is the root value that determines size of spinner parts.
+Change this to whatever you want and spinner elements will size to match. */
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: .4em;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: all 1s;
+}
+
+/* focus/disabled styles, you can change this for accessibility */
+button:focus, button:disabled {
+  outline: none;
+  background: #aaa;
+}
+
+/* This is the space for the spinner to appear, applied to the button */
+.spin {
+  padding-left: 2.5em;
+  display: block;
+}
+
+/* position of the spinner when it appears, you might have to change these values */
+.spin .spinner {
+  left: -.6em;
+  top: .4em;
+  width: 2.5em;
+  display: block;
+  position: absolute;
+}
+
+/* spinner animation */
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* The actual spinner element is a pseudo-element */
+.spin .spinner::before {
+  content: "";
+  width: 1.5em; /* Size of the spinner */
+  height: 1.5em; /* Change as desired */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: solid .35em #999; /* Thickness/color of spinner track */
+  border-bottom-color: #555; /* Color of variant spinner piece */
+  animation: .8s linear infinite spinner; /* speed of spinner */
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+/* optional, but it will affect the size if changed */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+
+.close {
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: .2;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: black;
+}
+
+/* Style to change separator  */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}

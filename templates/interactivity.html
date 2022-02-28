@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="my_sizeFigs_data" data-sizeFigs="{{ sizeFigs }}">
+  <meta id="my_keys_data" data-keys="{{ keys }}">
+  <title>UXON</title>
+  <!-- favicon -->
+  <link rel="icon" href="../static/favicon.svg" sizes="32x32" type="image/svg">
+
+  <link rel="stylesheet" href="./static/bootstrap.css">
+  <link rel="stylesheet" href="./static/bootstrap-grid.css">
+  <link rel="stylesheet" href="./static/bootstrap-reboot.css">
+  <link rel="stylesheet" href="./static/custom.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+  <div class="jumbotron" style="width: 100%">
+    <div class="container">
+      <h1 class="display-3"> Measured Values </h1>
+      <p>
+        Shows the Compomus' UX measurement.
+      </p>
+    </div>
+  </div>
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb" style="background-color: white;">
+        <li class="breadcrumb-item">Home</li>
+        <li class="breadcrumb-item active" aria-current="page">Measured Values</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="container">
+    <div class="card card-query" style="margin-top: 20px">
+      <div class="card-body">
+        <h5 class="card-title">Measured Values</h5>
+        <div class="container" style="padding-top: 30px" id="measured_values_pdf">
+          <table class="table table-striped table-responsive" id="measured_values">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col"><b>User</b></th>
+                <th scope="col"><b>Interactivity (section time)</b></th>
+                <th scope="col"><b>Engagement (number of interactions)</b></th>
+                <th scope="col"><b>Percentage of Interactions</b></th>
+              </tr>
+            </thead>
+            {% for part in interactivity %}
+            <tr scope="row">
+              <td><b>{{part[0]}}</b></td>
+              <td>{{'%.2f' % (part[1])}}%</td>
+              <td>{{part[2]}}</td>
+              <td>{{'%.2f' % (part[3])}}%</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <div class="row" style="display: flex; float: right; margin-right: 20px">
+          <button type="button" class="btn btn-secondary float-right">
+            <i class="fa fa-download" style="padding: 5px"></i>
+            <a onclick="download_table_as_csv('measured_values');">Download as CSV</a>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card card-query" id="graphs">
+      <div class="card-body">
+        <div class="container" id="tableFig">
+          {{ tableFig |safe }}
+        </div>
+        <div id="tableFigImage" style="display: none;">
+          <img src="../static/tableFig.png" alt="..." height="400" />
+        </div>
+        <div class="container" id="engagementFig">
+          {{ engagementFig |safe }}
+        </div>
+        <div id="engagementFigImage" style="display: none;">
+          <img src="../static/engagementFig.png" alt="..." height="400" />
+        </div>
+
+        <div class="container" id="topSound">
+          {{ figTopSound |safe }}
+        </div>
+        <div id="topSoundImage" style="display: none;">
+          <img src="../static/topSound.png" alt="..." height="400" />
+        </div>
+        <div class="container" id="topUsers">
+          {{ figTopUser |safe }}
+        </div>
+        <div id="figTopUsersImage" style="display: none;">
+          <img src="../static/topUsers.png" alt="..." height="400" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-query" style="margin-bottom: 30px">
+      <div class="card-body">
+        <h5 class="card-title">Simple Graphs</h5>
+        <div class="container">
+          <div id="accordion">
+            {% for key, value in fig.items() %}
+            <div class="card">
+              <div class="card-header" id="heading{{ loop.index }}">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ loop.index }}"
+                    aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                    {% if key == 0 %}
+                    <i class="fa fa-angle-right"></i> Full Graph
+                    {% endif %}
+                    {% if key != 0 %}
+                    <i class="fa fa-angle-right"></i> User {{ key }} Graph
+                    {% endif %}
+                  </button>
+                </h5>
+              </div>
+
+
+              <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                {{ value |safe }}
+
+                <div id="collapseImage{{ loop.index }}" style="display: none;">
+                  <img src="{{ '../static/graph' + key|string +'.png' }}" alt="..." height="400" />
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-query" style="margin-bottom: 30px">
+      <div class="card-body">
+        <h5 class="card-title">Interactivity Graphs</h5>
+        <div class="container">
+          <div id="accordion2">
+            {% for key2, value2 in figInteractive.items() %}
+            <div class="card">
+              <div class="card-header" id="heading{{ loop.index }}i">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ loop.index }}i"
+                    aria-expanded="false" aria-controls="collapse{{ loop.index }}i">
+                    {% if key2 == 0 %}
+                    <i class="fa fa-angle-right"></i> Full Graph
+                    {% endif %}
+                    {% if key2 != 0 %}
+                    <i class="fa fa-angle-right"></i> User {{ key2 }} Graph
+                    {% endif %}
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse{{ loop.index }}i" class="collapse" aria-labelledby="headingOne"
+                data-parent="#accordion2">
+                <div class="card-body">
+                  {{ value2 |safe }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- {% for key, value in fig.items() %}
+  <div>
+    {{ value2 |safe }}
+  </div>
+  {% endfor %}
+  </div>
+
+  {% for key2, value2 in figInteractive.items() %}
+  <div>
+    {{ value2 |safe }}
+  </div>
+  {% endfor %}
+  </div> -->
+
+    <div class="card card-query" style="margin-bottom: 50px">
+      <form id="reportForm" method="POST" action="{{ url_for('evaluation_report') }}">
+        <div class="card-body">
+          <h5 class="card-title">Expert Comment</h5>
+          <div class="container">
+            <div class="form-group">
+              <label for="evaluator"> Insert the name of the UX/UI Specialist</label>
+              <br>
+              <input type="text" id="evaluator">
+              <br>
+              <label for="comment"> Insert a comment for the Evaluation Report here</label>
+              <textarea class="form-control" id="comment" rows="3"></textarea>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-secondary float-right" style="margin-right: 5px; margin-bottom: 20px">
+            <i class="fa fa-download" style="padding: 5px"></i>
+            <a onclick="download_screenshot()">Download Full Report</a>
+          </button>
+
+          <div id="new"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <!--    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+    integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='jspdf.plugin.autotable.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.js" integrity="sha512-HxRYiFgCqVw4U7zJr3iI0U/820+7BXPHd38EM7HZjtOwCKKwKDinaVLj5bmLj2wsRrJvnpQmB5sFg2kYl+LDHw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!--<script type="text/javascript" src="{{ url_for('static', filename='html2canvas.js') }}"></script>-->
+  <!--  <script type="text/javascript" src="{{ url_for('static', filename='html2pdf.bundle.min.js') }}"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"
+    integrity="sha512-YcsIPGdhPK4P/uRW6/sruonlYj+Q7UHWeKfTAkBW+g83NKM+jMJFJ4iAPfSnVp7BKD4dKMHmVSvICUbE/V1sSw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Add down arrow icon for collapse element which is open by default
+      $(".collapse.show").each(function () {
+        $(this).prev(".card-header").find(".fa").addClass("fa-angle-down").removeClass("fa-angle-right");
+      });
+
+      // Toggle right and down arrow icon on show hide of collapse element
+      $(".collapse").on('show.bs.collapse', function () {
+        $(this).prev(".card-header").find(".fa").removeClass("fa-angle-right").addClass("fa-angle-down");
+      }).on('hide.bs.collapse', function () {
+        $(this).prev(".card-header").find(".fa").removeClass("fa-angle-down").addClass("fa-angle-right");
+      });
+    });
+
+    // Quick and simple export target #table_id into a csv
+    function download_table_as_csv(table_id, separator = ',') {
+      // Select rows from table_id
+      var rows = document.querySelectorAll('table#' + table_id + ' tr');
+      // Construct csv
+      var csv = [];
+      for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll('td, th');
+        for (var j = 0; j < cols.length; j++) {
+          // Clean innertext to remove multiple spaces and jumpline (break csv)
+          var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
+          // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
+          data = data.replace(/"/g, '""');
+          data = data.replace(/%/g, '');
+          // Push escaped string
+          row.push(data);
+        }
+        csv.push(row.join(separator));
+      }
+      var csv_string = csv.join('\n');
+      // Download it
+      var filename = 'export_' + table_id + '_' + new Date().toLocaleDateString() + '.csv';
+      var link = document.createElement('a');
+      link.style.display = 'none';
+      link.setAttribute('target', '_blank');
+      link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function download_table_as_pdf() {
+      var doc = new jsPDF()
+      doc.autoTable({ html: '#measured_values_pdf' })
+      doc.save('table.pdf')
+    }
+
+    function download_screenshot(sizeFigs) {
+
+      var today = new Date();
+      var month = today.getMonth() + 1;
+      var monthString = '';
+      if (month < 10) {
+        monthString = '0' + month;
+      }
+
+      var date = today.getDate() + '/' + monthString + '/' + today.getFullYear();
+
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+      var dateTime = 'Created in ' + date + ' ' + time;
+
+      var opt = {
+        margin: 0.5,
+        filename: 'FullReport_' + date + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 1 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+
+      var elementToPrint = document.createElement('div');
+      elementToPrint.style.cssText = 'max-width: 720px;'
+
+      var input0 = document.getElementById('evaluator').value;
+      var input = document.getElementById('comment').value;
+      var table = document.getElementById("measured_values_pdf");
+
+      var evaluatorTitle = document.createElement("p");
+      var textEvaluator = document.createTextNode("Evaluator: ");
+      evaluatorTitle.appendChild(textEvaluator);
+
+      var evaluatorName = document.createElement("p");
+      var name = document.createTextNode(input0);
+      evaluatorName.appendChild(name);
+
+      var evaluationTitle = document.createElement("p");
+      var textEvaluation = document.createTextNode("Evaluation Comment:");
+      evaluationTitle.appendChild(textEvaluation);
+
+      var tag = document.createElement("p");
+      var text = document.createTextNode(input);
+      tag.appendChild(text);
+
+      var reportTitle = document.createElement("h3");
+      reportTitle.appendChild(document.createTextNode("Evaluation Report"));
+
+      var title = document.createElement("h3");
+      title.appendChild(document.createTextNode("Measured Values"));
+
+      var dateElement = document.createElement("p");
+      dateElement.appendChild(document.createTextNode(dateTime));
+
+
+      elementToPrint.appendChild(reportTitle);
+      elementToPrint.appendChild(dateElement);
+      elementToPrint.appendChild(evaluatorTitle);
+      elementToPrint.appendChild(evaluatorName);
+      elementToPrint.appendChild(evaluationTitle);
+      elementToPrint.appendChild(tag);
+      elementToPrint.appendChild(title);
+      elementToPrint.appendChild(table.cloneNode(true));
+
+      var divNewPage = document.createElement('div');
+      divNewPage.classList.add("html2pdf__page-break");
+
+      elementToPrint.appendChild(divNewPage.cloneNode(true));
+      var titleGraphs = document.createElement("h3");
+      titleGraphs.appendChild(document.createTextNode("Measured Values Graphs"));
+      elementToPrint.appendChild(titleGraphs);
+
+      var graph = document.getElementById("tableFigImage").cloneNode(true);
+      graph.style.cssText = 'display: block !important;';
+      elementToPrint.appendChild(graph);
+
+      var graph2 = document.getElementById("engagementFigImage").cloneNode(true);
+      graph2.style.cssText = 'display: block !important;';
+      elementToPrint.appendChild(graph2);
+
+      elementToPrint.appendChild(divNewPage.cloneNode(true));
+      var titleTopGraphs = document.createElement("h3");
+      titleTopGraphs.appendChild(document.createTextNode("Top 5 Graphs"));
+      elementToPrint.appendChild(titleTopGraphs);
+
+      var graphTopSound = document.getElementById("topSoundImage").cloneNode(true);
+      graphTopSound.style.cssText = 'display: block !important;';
+      elementToPrint.appendChild(graphTopSound);
+
+      var graphTopUsers = document.getElementById("figTopUsersImage").cloneNode(true);
+      graphTopUsers.style.cssText = 'display: block !important;';
+      elementToPrint.appendChild(graphTopUsers);
+
+      var sizeFigs_data = $('#my_sizeFigs_data').data("sizefigs");
+      var keys_data = $('#my_keys_data').data("keys");
+
+      elementToPrint.appendChild(divNewPage.cloneNode(true));
+
+      simpleGraphsTitle = document.createElement("h3");
+      simpleGraphsTitle.appendChild(document.createTextNode("Simple Graphs"));
+      elementToPrint.appendChild(simpleGraphsTitle);
+
+      for (var i = 1; i <= sizeFigs_data; i++) {
+
+        if (i > 1 && i % 2 != 0) {
+          elementToPrint.appendChild(divNewPage.cloneNode(true));
+        }
+
+        var titleGraphUser = document.createElement("h6");
+        if (keys_data[i - 1] != 0) {
+          titleGraphUser.appendChild(document.createTextNode("User " + keys_data[i - 1]));
+        } else {
+          titleGraphUser.appendChild(document.createTextNode("Full Graph"));
+        }
+        elementToPrint.appendChild(titleGraphUser);
+
+        var graphCollapse = document.getElementById("collapseImage" + i).cloneNode(true);
+        graphCollapse.style.cssText = 'display: block !important;';
+        elementToPrint.appendChild(graphCollapse);
+      }
+
+      html2pdf().set({
+        pagebreak: { mode: 'avoid-all' }
+      });
+
+      html2pdf(elementToPrint, opt);
+    }
+
+    function demoFromHTML(figures) {
+      var doc = new jsPDF('p', 'pt');
+      var res = doc.autoTableHtmlToJson(document.getElementById('measured_values'));
+      var height = doc.internal.pageSize.height;
+      doc.setFontSize(24);
+      doc.text("Evaluation Full Report", 200, 50);
+      doc.setFontSize(18);
+      doc.text("Measured Values", 50, 100);
+      doc.autoTable(res.columns, res.data, {
+        startY: 125
+      });
+
+      doc.text("Graphs", 50, 300);
+      console.log(figures);
+      Plotly.toImage('engagementFig', { format: 'png', height: 400, width: 500 }).then(function (dataUrl) {
+        // use the dataUrl
+        console.log(dataUrl);
+        doc.addImage(dataUrl, 'png', 150, 150, 180, 160);
+        doc.save('full_report.pdf');
+      });
+    }
+  </script>
+</body>
+
+</html>

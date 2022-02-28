@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="../static/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/custom.css">
+</head>
+<nav class="navbar navbar-expand-lg navbar-collapse navbar-light bg-light rounded">
+  <!--    <a class="navbar-brand" style="color: black;" href="/">User Experience Measurement Tool</a>-->
+  <a class="navbar-brand" href="#">
+    <img src="../static/uxon.001.svg" alt="..." height="36">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" style="color: black;" href="/uxon/">Upload log file</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" style="color: black;" href="/uxon/measured-value">Measured Values</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" style="color: black;" id="navbarDropdown" role="button"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Queries
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/uxon/queries">Defined Queries</a>
+          <a class="dropdown-item" href="/uxon/custom-queries">Custom Queries</a>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</nav>
