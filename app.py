@@ -243,23 +243,23 @@ def showMoreInteractivity():
         df["y"] = pd.to_numeric(df["y"], errors='coerce')
         df["z"] = pd.to_numeric(df["z"], errors='coerce')
 
-        df["somInt"] = df["som"];
+        df["Sound"] = df["som"];
 
-        df = df.astype({'somInt': 'int64'})
+        df = df.astype({'Sound': 'int64'})
         df = df.astype({'som': 'string'})
         # df = df.astype({'som': 'int64'})
         df = df.astype({'pessoa': 'int64'})
         df = df.astype({'x': 'float64'})
         df = df.astype({'y': 'float64'})
 
-        fig = px.scatter(df, x=df.x, y=df.y, color=df.som, size=df.somInt, hover_data=[df.pessoa, df.hora])
+        fig = px.scatter(df, x=df.x, y=df.y, color=df.som, size=df.Sound, hover_data=[df.pessoa, df.hora],labels={"som": "Sound", "hora": "Time", "pessoa": "User"})
 
         # fig = px.scatter(df, x=df.x, y=df.y, color=df.som,error_x_minus=None, error_y_minus=None, range_x=[-1000, 1000], range_y=[-1000, 1000])
 
         fig_interactive = px.scatter(df, x=df.x, y=df.y, animation_frame=df.hora, animation_group=df.pessoa,
-                                     size=df.somInt, color=df.som, hover_name=df.pessoa,
+                                     size=df.Sound, color=df.Sound, hover_name=df.pessoa,
                                      error_x_minus=None, error_y_minus=None, range_x=[-1000, 1000],
-                                     range_y=[-1000, 1000])
+                                     range_y=[-1000, 1000],labels={"som": "Sound", "hora": "Time", "pessoa": "User"})
 
         graphs[int(u)] = fig.to_html(full_html=False)
         graphsImages[int(u)] = fig.to_image(format='png')
@@ -273,9 +273,9 @@ def showMoreInteractivity():
     all_participations_df["y"] = pd.to_numeric(all_participations_df["y"], errors='coerce')
     all_participations_df["z"] = pd.to_numeric(all_participations_df["z"], errors='coerce')
 
-    all_participations_df["somInt"] = all_participations_df["som"];
+    all_participations_df["Sound"] = all_participations_df["som"];
 
-    all_participations_df = all_participations_df.astype({'somInt': 'int64'})
+    all_participations_df = all_participations_df.astype({'Sound': 'int64'})
     all_participations_df = all_participations_df.astype({'som': 'string'})
 
     # all_participations_df = all_participations_df.astype({'som': 'int64'})
@@ -286,14 +286,14 @@ def showMoreInteractivity():
     all_participations_df = all_participations_df.sort_values(by='hora')
 
     figAll = px.scatter(all_participations_df, x=all_participations_df.x, y=all_participations_df.y,
-                        color=all_participations_df.som, size=all_participations_df.somInt,
-                        hover_data=[all_participations_df.pessoa, all_participations_df.hora])
+                        color=all_participations_df.som, size=all_participations_df.Sound,
+                        hover_data=[all_participations_df.pessoa, all_participations_df.hora],labels={"som": "Sound", "hora": "Time", "pessoa": "User"})
     figAllInteractive = px.scatter(all_participations_df, x=all_participations_df.x, y=all_participations_df.y,
                                    animation_frame=all_participations_df.hora,
                                    animation_group=all_participations_df.pessoa,
-                                   size=all_participations_df.somInt, color=all_participations_df.pessoa,
+                                   size=all_participations_df.Sound, color=all_participations_df.Sound,
                                    hover_name=all_participations_df.pessoa, error_x_minus=None, error_y_minus=None,
-                                   range_x=[-1000, 1000], range_y=[-1000, 1000])
+                                   range_x=[-1000, 1000], range_y=[-1000, 1000],labels={"som": "Sound", "hora": "Time", "pessoa": "User"})
 
     graphs[0] = figAll.to_html(full_html=False)
     graphsImages[0] = figAll.to_image(format='png')
