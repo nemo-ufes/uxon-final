@@ -490,6 +490,8 @@ def customQuery():
 
     if int(type) == 1 or (True in filterBool):
         query1 = get_all_participations_filter2(filters)
+        if len(query1.index) == 0:
+            flash('No results.', 'error')
     else:
         query1 = []
 
@@ -522,6 +524,8 @@ def customQuery():
         else:
             # search with filter
             query2 = get_all_number_participations_filter2(filters2)
+            if len(query2.index) == 0:
+                flash('No results.', 'warning')
     else:
         query2 = []
 
@@ -861,7 +865,7 @@ def get_all_number_participations_filter2(filters):
                     select = select + """HAVING(?count >= %d && ?count <= %d)""" % (filters[index], filters[index + 1])
                     # params.append(filters[index + 1])
                 else:
-                    select = select + """HAVING(?count >= ??)""" % filters[index]
+                    select = select + """HAVING(?count >= %d)""" % filters[index]
                     # params.append(filters[index])
             # input4
             if index == 3:
@@ -876,8 +880,10 @@ def get_all_number_participations_filter2(filters):
         select = select + """
          } GROUP BY ?user ?type
         """
+    print(select)
     csv_results = conn.select(select, content_type='text/csv')
     df = pd.read_csv(io.BytesIO(csv_results))
+
     print(df.head())
     return df
 
