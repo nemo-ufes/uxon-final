@@ -21,17 +21,17 @@ ALLOWED_EXTENSIONS = set(['csv'])
 result_interactivity = {}
 result_behavior = {}
 
-connection_details = {
-    'endpoint': 'http://dev.nemo.inf.ufes.br:5820',
-    'username': 'admin',
-    'password': 'admin'
-}
-
 # connection_details = {
-#   'endpoint': 'http://localhost:5820',
-#   'username': 'admin',
-#   'password': 'admin'
+#     'endpoint': 'http://dev.nemo.inf.ufes.br:5820',
+#     'username': 'admin',
+#     'password': 'admin'
 # }
+
+connection_details = {
+  'endpoint': 'http://localhost:5820',
+  'username': 'admin',
+  'password': 'admin'
+}
 
 conn = stardog.Connection('uxon', **connection_details)
 
@@ -146,12 +146,12 @@ def loadIndividuals(log_file):
         result_behavior[int(u[0].user_id)] = countSound + countPosition
 
     global fil
-    fil = open('/var/www/uxon/static/teste.owl', 'w')
-    onto.save(file='/var/www/uxon/static/teste.owl', format="rdfxml")
+    fil = open('./static/teste.owl', 'w')
+    onto.save(file='./static/teste.owl', format="rdfxml")
 
     with conn:
         conn.begin()
-        conn.add(stardog.content.File('/var/www/uxon/static/teste.owl'))
+        conn.add(stardog.content.File('./static/teste.owl'))
         conn.commit()
 
     interactivityDf = measureUserEngagement2()
@@ -172,13 +172,13 @@ def loadIndividuals(log_file):
         for p in user_participations:
             p[0].is_measured_by.append(percentualMeasurement)
 
-    fil = open('/var/www/uxon/static/teste.owl', 'w')
-    onto.save(file='/var/www/uxon/static/teste.owl', format="rdfxml")
+    fil = open('./static/teste.owl', 'w')
+    onto.save(file='./static/teste.owl', format="rdfxml")
 
     with conn:
         conn.begin()
         conn.clear()
-        conn.add(stardog.content.File('/var/www/uxon/static/teste.owl'))
+        conn.add(stardog.content.File('./static/teste.owl'))
         conn.commit()
 
 
@@ -208,7 +208,7 @@ def createFirstGraph():
     tableFig.update_layout(title='User Interactivity and Percentage of Interactions')
 
     # tableFig.write_image(file="static/tableFig.png", format='png')
-    tableFig.write_image(file="/var/www/uxon/static/tableFig.png", format='png')
+    tableFig.write_image(file="./static/tableFig.png", format='png')
     return tableFig.to_html(full_html=False), interactivityDf
 
 
@@ -219,7 +219,7 @@ def showMoreInteractivity():
     engagementFig = px.bar(dataframeFull, x="User", y="Engagement", color="User", title="User Engagement",
                            text=dataframeFull["Engagement"])
     engagementFig.update_xaxes(type='category')
-    engagementFig.write_image(file="/var/www/uxon/static/engagementFig.png", format='png')
+    engagementFig.write_image(file="./static/engagementFig.png", format='png')
     # engagementFig.write_image(file="static/engagementFig.png", format='png')
     engagementFigHtml = engagementFig.to_html(full_html=False)
 
@@ -264,7 +264,7 @@ def showMoreInteractivity():
         graphs[int(u)] = fig.to_html(full_html=False)
         graphsImages[int(u)] = fig.to_image(format='png')
         # fig.write_image(file="static/graph"+str(u)+".png", format='png')
-        fig.write_image(file="/var/www/uxon/static/graph" + str(u) + ".png", format='png')
+        fig.write_image(file="./static/graph" + str(u) + ".png", format='png')
         interactive_graphs[int(u)] = fig_interactive.to_html(full_html=False, auto_play=False)
 
     all_participations_df = queryStardog2()
@@ -297,7 +297,7 @@ def showMoreInteractivity():
 
     graphs[0] = figAll.to_html(full_html=False)
     graphsImages[0] = figAll.to_image(format='png')
-    figAll.write_image(file="/var/www/uxon/static/graph0.png", format='png')
+    figAll.write_image(file="./static/graph0.png", format='png')
     # figAll.write_image(file="static/graph0.png", format='png')
 
     interactive_graphs[0] = figAllInteractive.to_html(full_html=False, auto_play=False)
@@ -338,8 +338,8 @@ def createTopGraphs():
                        text=topUser["Participations"])
     tableFig2.update_xaxes(type='category')
 
-    tableFig.write_image(file="/var/www/uxon/static/topSound.png", format='png')
-    tableFig2.write_image(file="/var/www/uxon/static/topUsers.png", format='png')
+    tableFig.write_image(file="./static/topSound.png", format='png')
+    tableFig2.write_image(file="./static/topUsers.png", format='png')
     # tableFig.write_image(file="static/topSound.png", format='png')
     # tableFig2.write_image(file="static/topUsers.png", format='png')
     return tableFig.to_html(full_html=False), tableFig2.to_html(full_html=False)
@@ -583,7 +583,7 @@ def upload_image():
         flash('Only CSV files allowed.')
         return redirect(request.url)
 
-    return redirect('/uxon/measured-value')
+    return redirect('/measured-value')
 
 
 def get_all_users():
